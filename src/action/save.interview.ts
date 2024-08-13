@@ -16,6 +16,7 @@ export async function saveInterviewData({
     jobDesc: string
 }) {
     try {
+        console.log(jsonMockResp, userId, jobPosition, jobExperience)
         const responseData = await prisma.mockInterview.create({
             data: {
                 userId: userId,

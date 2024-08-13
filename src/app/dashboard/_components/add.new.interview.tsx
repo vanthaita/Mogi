@@ -16,6 +16,22 @@ import {chatSession} from '../../../utils/gemini.ai'
 import { useRouter } from 'next/navigation'
 import { useClerk } from '@clerk/nextjs'
 import { saveInterviewData } from '@/action/save.interview'
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
+import { Plus } from 'lucide-react'
 const AddNewInterview = () => {
     const [openAddNewInterview, setOpenAddNewInterview] = useState(false)
     const [jobPosition, setJobPosition] = useState('')
@@ -51,7 +67,7 @@ const AddNewInterview = () => {
               jobExperience: experience,
               jsonMockResp: JSON.stringify(MockJsonResponse),
             })
-    
+            console.log(response)
             if (response) {
               router.push(`/dashboard/interview/${response}`)
             } else {
@@ -70,62 +86,71 @@ const AddNewInterview = () => {
 
 
     return (
-        <div>
-        <div className='' onClick={() => setOpenAddNewInterview(!openAddNewInterview)}>
-            <h1 className=' text-3xl font-bold'>Create your interview</h1>
-            <Button variant='neutral'>Add new</Button>
-        </div>
+        <div className='mt-4'>
+          <div className='' onClick={() => setOpenAddNewInterview(!openAddNewInterview)}>
+              <ContextMenu>
+                <ContextMenuTrigger className="flex h-[150px] w-[300px] cursor-pointer items-center justify-center rounded-md border border-border dark:border-darkText border-dashed text-sm font-base">
+                    <div className='flex justify-center items-center gap-x-2'>
+                      <Plus className=''/>  
+                      <span className='text-lg gap font-medium'>
+                        Add new
+                      </span>
+                    </div>
 
-        <Dialog open={openAddNewInterview}>
-            <DialogContent className="sm:max-w-[825px]">
-            <DialogHeader>
-                <DialogTitle className='text-3xl font-bold'>Tell us more about the job you are interviewing for.</DialogTitle>
-                <DialogDescription className='text-sm font-medium'>
-                Provide details about the job you&apos;re interviewing for.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-4 py-4">
-                <div className="flex flex-col gap-2">
-                <Label htmlFor="role">
-                    Job Position/Role
-                </Label>
-                <Input
-                    id="role"
-                    placeholder="e.g., Frontend Developer"
-                    value={jobPosition}
-                    onChange={(e) => setJobPosition(e.target.value)}
-                />
-                </div>
-                <div className="flex flex-col gap-2">
-                <Label htmlFor="tech-stack">
-                    Tech Stack
-                </Label>
-                <Input
-                    id="tech-stack"
-                    placeholder="e.g., React, TypeScript, TailwindCSS"
-                    value={jobDescription}
-                    onChange={(e) => setJobDescription(e.target.value)}
-                />
-                </div>
-                <div className="flex flex-col gap-2">
-                <Label htmlFor="experience">
-                    Years of Experience
-                </Label>
-                <Input
-                    id="experience"
-                    placeholder="e.g., 3 years"
-                    type="number"
-                    value={experience}
-                    onChange={(e) => setExperience(e.target.value)}
-                />
-                </div>
-            </div>
-            <DialogFooter className="flex justify-end gap-2">
-                <Button variant='neutral' onClick={() => setOpenAddNewInterview(false)}>Cancel</Button>
-                <Button className='bg-blue-400' type="button" onClick={handleSubmit}>{loading && 'Loading...'} Start Interview</Button>
-            </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </ContextMenuTrigger>
+              </ContextMenu>
+          </div>
+
+          <Dialog open={openAddNewInterview}>
+              <DialogContent className="sm:max-w-[825px]">
+              <DialogHeader>
+                  <DialogTitle className='text-3xl font-bold'>Tell us more about the job you are interviewing for.</DialogTitle>
+                  <DialogDescription className='text-sm font-medium'>
+                  Provide details about the job you&apos;re interviewing for.
+                  </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-4 py-4">
+                  <div className="flex flex-col gap-2">
+                  <Label htmlFor="role">
+                      Job Position/Role
+                  </Label>
+                  <Input
+                      id="role"
+                      placeholder="e.g., Frontend Developer"
+                      value={jobPosition}
+                      onChange={(e) => setJobPosition(e.target.value)}
+                  />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                  <Label htmlFor="tech-stack">
+                      Tech Stack
+                  </Label>
+                  <Input
+                      id="tech-stack"
+                      placeholder="e.g., React, TypeScript, TailwindCSS"
+                      value={jobDescription}
+                      onChange={(e) => setJobDescription(e.target.value)}
+                  />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                  <Label htmlFor="experience">
+                      Years of Experience
+                  </Label>
+                  <Input
+                      id="experience"
+                      placeholder="e.g., 3 years"
+                      type="number"
+                      value={experience}
+                      onChange={(e) => setExperience(e.target.value)}
+                  />
+                  </div>
+              </div>
+              <DialogFooter className="flex justify-end gap-2">
+                  <Button variant='neutral' onClick={() => setOpenAddNewInterview(false)}>Cancel</Button>
+                  <Button className='bg-blue-400' type="button" onClick={handleSubmit}>{loading && 'Loading...'} Start Interview</Button>
+              </DialogFooter>
+              </DialogContent>
+          </Dialog>
         </div>
     )
 }
