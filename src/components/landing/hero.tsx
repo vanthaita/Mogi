@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { BookOpen, Mic } from 'lucide-react'; // Importing icons from Lucide-react
 import Image from 'next/image';
+import { Card } from '../ui/card';
 const Hero = () => {
   return (
     <div className="w-full top-8 flex flex-col items-center relative p-8 text-center overflow-hidden">
@@ -28,21 +29,16 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className=" border-2 border-black rounded-md w-1/2 h-1/2 mt-10 flex items-center justify-center">
-        {/* <Mic className="text-white w-16 h-16" /> Custom Mic icon to match the Neobrutalism style */}
-        {/* Image dashboard or another element can be placed here */}
+      <Card className="rounded-md w-1/2 h-1/2 mt-10 flex items-center justify-center">
         <Image 
-          src='/hero-image.jpg'
+          src='/dashboard.png'
           height={1048}
           width={1048}
           className=' w-full h-full object-contain'
           alt='hero-image'
         />
-      </div>
-
-
+      </Card>
       <div>
-     
       </div>
     </div>
   );

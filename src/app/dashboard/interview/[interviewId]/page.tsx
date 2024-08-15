@@ -18,14 +18,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from '@/components/ui/alert-dialog'
-interface InterViewData {
-    id: string
-    jobDesc: string
-    jobExperience: string
-    jobPosition: string
-    jsonMockResp: string
-    userId: string
-}
+import { InterViewData } from '@/utils/type'
 
 const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [interviewData, setInterviewData] = useState<InterViewData | null>(null)
@@ -47,7 +40,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     return (
         <div className='w-full h-full p-8 '>
             <div className='flex flex-col w-full h-full gap-x-4'>
-                <span className='font-bold text-4xl text-center mb-8'>Let's Get Started with Your Mock Interview</span>
+                <span className='font-bold text-4xl text-center mb-8'>Let&apos;s Get Started with Your Mock Interview</span>
                 <div className='flex flex-col lg:flex-row w-full h-full gap-8'>
                     {/* Job Description & Details */}
                     <div className=' w-2/3 h-full flex flex-col gap-8 justify-between'>

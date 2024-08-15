@@ -2,14 +2,7 @@
 import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Star } from 'lucide-react';
-
-interface FeedbackItemProps {
-    item: any;
-    index: number;
-    getRatingColor: (rating: number) => string;
-    getUserAnswerColor: (rating: number) => string;
-}
-
+import { FeedbackItemProps } from '@/utils/type';
 const FeedbackCard: React.FC<FeedbackItemProps> = ({ item, index, getRatingColor, getUserAnswerColor }) => {
     return (
         <Accordion

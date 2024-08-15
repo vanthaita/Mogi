@@ -19,3 +19,26 @@ export async function GetInterviewData({interviewId} : {interviewId: string}) {
     });
     return FeedBackData
 }
+
+export async function GetAllInterviewData({userId} : {userId: string}) {
+    const FeedBackData = await prisma.mockInterview.findMany({
+        where: { 
+            userId
+        },
+        select: {
+            id: true,
+            jobPosition: true,
+            jobDesc: true,
+            jobExperience: true,
+            userId: true,
+            createdAt: true,
+            updatedAt: true,
+            jsonMockResp: true,
+            mockId: true
+        },
+    });
+    return FeedBackData
+}
+
+
+

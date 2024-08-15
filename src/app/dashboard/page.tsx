@@ -1,16 +1,7 @@
 import React from 'react';
-import AddNewInterview from './_components/add.new.interview';
-import ListInterview from './_components/list.interview';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
-import { Card } from '@/components/ui/card';
+import AddNewInterview from './components/add.new.interview';
+import ListInterview from './components/list.interview';
+
 
 const DashboardPage = () => {
   

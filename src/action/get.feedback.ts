@@ -11,6 +11,5 @@ export async function getFeedBackData({interviewId} : {interviewId: string}) {
             userAnswers: true
         },
     });
-
     return interviewData
 }

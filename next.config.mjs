@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    webpack: (config) => {
+        // Ensure 'fs' module is ignored in client-side builds
+        config.resolve.fallback = { 
+            ...config.resolve.fallback, 
+            fs: false 
+        };
+
+        return config;
+    },
+};
 
 export default nextConfig;

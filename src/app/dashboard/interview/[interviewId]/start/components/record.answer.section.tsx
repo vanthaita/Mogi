@@ -8,16 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Mic } from 'lucide-react';
 import Image from 'next/image';
-interface InterviewQuestion {
-    Question: string;
-    Answer: string;
-}
-
-interface RecordAnswerSectionProps {
-    mockInterviewQuestions: InterviewQuestion[];
-    activeQuestionIndex: number;
-    interviewData: any;
-}
+import { InterviewQuestion } from '@/utils/type';
+import { RecordAnswerSectionProps } from '@/utils/type';
 
 const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
     interviewData,
@@ -49,24 +41,24 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
             if (userAnswer.length < 1) {
                 return;
             }
-
-            const feedbackPrompt = "Question: " + mockInterviewQuestions[activeQuestionIndex].Question +
-            ", User Answer: " + "Hello my name is" + ", Based on the question and user's answer, " +
-            "please provide a rating (rating 1 to 10) for the answer and feedback in the areas of improvement. " +
-            "Please respond in JSON format with 'rating' and 'feedback' fields.";
+            const FeedBackPromptTemplate = process.env.NEXT_PUBLIC_FEEDBACK_PROMPT || ''
+            const feedbackPrompt = FeedBackPromptTemplate
+                .replace("{{mockInterviewQuestions[activeQuestionIndex].question}}", mockInterviewQuestions[activeQuestionIndex].question)
+                .replace("{{userAnswer}}", userAnswer)
             const responseFormAi = await chatSession.sendMessage(feedbackPrompt);
 
             const mockJsonResponse = JSON.parse(responseFormAi.response.text());
 
             const responseData = await saveAnswerQuestion({
                 mockId: interviewData.mockId,
-                question: mockInterviewQuestions[activeQuestionIndex].Question,
+                question: mockInterviewQuestions[activeQuestionIndex].question,
                 correctAnswer: mockInterviewQuestions[activeQuestionIndex].Answer,
                 userAns: userAnswer,
                 feedback: mockJsonResponse.feedback,
                 rating: mockJsonResponse.rating.toString(),
                 userId: interviewData.userId,
             })
+            
             if (responseData) {
                 console.log('Answer saved successfully');
                 return;
