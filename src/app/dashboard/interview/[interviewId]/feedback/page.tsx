@@ -35,7 +35,7 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
     }
 
     return (
-        <Card className='w-full h-full p-8 bg-[#f7f7f7] border-2 border-black flex flex-col justify-between'>
+        <Card className='w-full h-full md:p-8 p-4 bg-[#f7f7f7] md:border-2 border-black flex flex-col justify-between'>
             <div className='flex flex-col gap-6'>
                 <h1 className='text-2xl font-bold mb-6'>Feedback</h1>
                 {feedBackData.length !== 0 && feedBackData && (
