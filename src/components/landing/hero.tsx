@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { BookOpen, Mic } from 'lucide-react'; // Importing icons from Lucide-react
 import Image from 'next/image';
 import { Card } from '../ui/card';
+import Link from 'next/link';
 const Hero = () => {
   return (
     <div className="w-full top-8 flex flex-col items-center relative p-8 text-center overflow-hidden">
@@ -20,16 +21,20 @@ const Hero = () => {
           Practice, Improve, and Succeed with personalized AI-driven interview mock sessions.
         </p>
         <div className="flex justify-center space-x-4">
-          <Button className="px-6 py-3 rounded-lg hover:scale-105 transform transition" variant='neutral'>
-            Get started
-          </Button>
-          <Button className="text-white px-6 py-3 rounded-lg hover:scale-105 transform transition bg-[#00b4d8]">
-            See on GitHub
-          </Button>
+          <Link href='/dashboard'>
+            <Button className="px-6 py-3 rounded-lg hover:scale-105 transform transition" variant='neutral'>
+              Get started
+            </Button>
+          </Link>
+          <Link href='https://github.com/TaThasi/Mogi'>
+            <Button className="text-white px-6 py-3 rounded-lg hover:scale-105 transform transition bg-[#00b4d8]">
+              See on GitHub
+            </Button>
+          </Link>
         </div>
       </div>
 
-      <Card className="rounded-md w-1/2 h-1/2 mt-10 flex items-center justify-center">
+      <Card className="rounded-md md:w-1/2 md:h-1/2 w-full h-full mt-10 flex items-center justify-center">
         <Image 
           src='/dashboard.png'
           height={1048}

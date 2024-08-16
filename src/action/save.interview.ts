@@ -1,7 +1,5 @@
 "use server";
-
 import prisma from '../utils/db'
-
 export async function saveInterviewData({
     jsonMockResp,
     userId,
