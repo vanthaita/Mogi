@@ -1,6 +1,6 @@
 # Mogi - AI Mock Interview SaaS
 
-Mogi is a web-based SaaS application designed to help users improve their interview skills through AI-driven mock interviews. Built with Next.js, TypeScript, Tailwind CSS, Prisma, Neon, and Clerk, Mogi provides personalized feedback to support users on their journey to success.
+Mogi is a web-based SaaS application designed to help users improve their interview skills through AI-driven mock interviews. Built with Next.js, TypeScript, Tailwind CSS, Prisma, Neon, Gemini API, Mogi provides personalized feedback to support users on their journey to success.
 
 ## Getting Started
 
@@ -17,13 +17,14 @@ Ensure you have the following installed:
 
 Clone the repository:
 
-
+``` bash
 git clone https://github.com/TaThasi/Mogi.git
 cd Mogi
+```
 
 Install the dependencies:
 
-bash
+```bash
 
 npm install
 # or
@@ -32,6 +33,7 @@ yarn install
 Running the Development Server
 
 Start the development server:
+```
 
 ```bash
 npm run dev
