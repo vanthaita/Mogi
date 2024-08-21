@@ -2,28 +2,45 @@
 import { LogOutIcon } from 'lucide-react';
 import React from 'react';
 import { Button } from '../ui/button';
-import { useClerk } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth.context';
+
 const Sidebar = () => {
-  // Sidebar content will be added here
-  const { signOut } = useClerk()
+  const { logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/logout`, {
+        method: 'GET',
+        mode: 'no-cors',
+        credentials: 'include',
+      });
+      if (!response) {
+        console.error('Logout failed:', response);
+      } 
+      logout();
+      router.replace('/sign-in'); 
+      window.location.reload(); 
+    } catch (err) {
+      console.error('Failed to log out:', err);
+    }
+  };
+
   return (
-    <aside className="w-[5rem] h-[calc(100vh] flex flex-col items-center py-4 border-r-4 justify-between">
+    <aside className="w-[5rem] h-[calc(100vh)] flex flex-col items-center py-4 border-r-4 justify-between">
       <div className="flex flex-col items-center gap-6 mt-8">
-        {/* Icons will be added here */}
         <div className="w-8 h-8 bg-black rounded-full"></div>
         <div className="w-8 h-8 bg-black rounded-full"></div>
         <div className="w-8 h-8 bg-black rounded-full"></div>
         <div className="w-8 h-8 bg-black rounded-full"></div>
       </div>
-
       <Button 
-        onClick={() => signOut({ redirectUrl: '/'})}
+        onClick={handleLogout}
         variant="neutral" 
-        className=" w-14 h-14 flex rounded-full items-center justify-center">
+        className="w-14 h-14 flex rounded-full items-center justify-center">
           <LogOutIcon className="w-10 h-10" />
       </Button>
-
-      
     </aside>
   );
 };

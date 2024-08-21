@@ -1,16 +1,17 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
-import Webcam from 'react-webcam';
+import dynamic from "next/dynamic";
 import useSpeechToText from 'react-hook-speech-to-text';
-import { chatSession } from '@/utils/gemini.ai';
-import { saveAnswerQuestion } from '@/action/save.answer';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Mic } from 'lucide-react';
 import Image from 'next/image';
 import { InterviewQuestion } from '@/utils/type';
 import { RecordAnswerSectionProps } from '@/utils/type';
-
+import Webcam from 'react-webcam';
+import { useAuth } from '@/context/auth.context';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
     interviewData,
     mockInterviewQuestions,
@@ -18,6 +19,8 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
 }) => {
     const webcamRef = useRef<Webcam>(null);
     const [userAnswer, setUserAnswer] = useState('');
+    const {user} = useAuth()
+    const [isLoading, setIsLoading] = useState(false)
     const {
         error,
         isRecording,
@@ -41,27 +44,47 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
             if (userAnswer.length < 1) {
                 return;
             }
-            const FeedBackPromptTemplate = process.env.NEXT_PUBLIC_FEEDBACK_PROMPT || ''
-            const feedbackPrompt = FeedBackPromptTemplate
-                .replace("{{mockInterviewQuestions[activeQuestionIndex].question}}", mockInterviewQuestions[activeQuestionIndex].question)
-                .replace("{{userAnswer}}", userAnswer)
-            const responseFormAi = await chatSession.sendMessage(feedbackPrompt);
-
-            const mockJsonResponse = JSON.parse(responseFormAi.response.text());
-
-            const responseData = await saveAnswerQuestion({
-                mockId: interviewData.mockId,
-                question: mockInterviewQuestions[activeQuestionIndex].question,
-                correctAnswer: mockInterviewQuestions[activeQuestionIndex].Answer,
-                userAns: userAnswer,
-                feedback: mockJsonResponse.feedback,
-                rating: mockJsonResponse.rating.toString(),
-                userId: interviewData.userId,
+            setIsLoading(true);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/feedback`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mockId: interviewData.id,
+                    question: mockInterviewQuestions[activeQuestionIndex].question,
+                    correctAnswer: mockInterviewQuestions[activeQuestionIndex].answer,
+                    userAns: userAnswer,
+                    userId: user?.id,
+                }),
+                credentials: 'include',
+            }).finally(() => {
+                setIsLoading(false);
             })
-            
-            if (responseData) {
-                console.log('Answer saved successfully');
-                return;
+            if (response.ok) {
+                toast.success('Success to save answer.', {
+                    className: 'border-2 border-black shadow-lg bg-gray-100 text-black p-6 rounded-none',
+                    bodyClassName: 'text-sm font-medium ',
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            } else {
+                toast.error('Failed to save answer.', {
+                    className: 'border-2 border-black shadow-lg bg-gray-100 text-black p-6 rounded-none',
+                    bodyClassName: 'text-sm font-medium ',
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
         } else {
             startSpeechToText();
@@ -89,14 +112,20 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
                 )}
             </div>
             <div className="w-full flex items-center justify-center mb-10">
-                <Button variant="neutral" onClick={saveUserAnswer}>
-                    {isRecording ? (
-                        <div className="flex gap-4 justify-center items-center">
-                            <Mic />
-                            <span className="text-red-500 text-lg font-medium">Stop Recording</span>
-                        </div>
+                <Button variant="neutral" onClick={saveUserAnswer} 
+                    disabled={isLoading || isRecording}
+                >
+                    {isLoading ? (
+                        <span>Saving...</span>
                     ) : (
-                        'Start Recording'
+                        isRecording ? (
+                            <div className="flex gap-4 justify-center items-center">
+                                <Mic />
+                                <span className="text-red-500 text-lg font-medium">Stop Recording</span>
+                            </div>
+                        ) : (
+                            <span>Start Recording</span>
+                        )
                     )}
                 </Button>
             </div>

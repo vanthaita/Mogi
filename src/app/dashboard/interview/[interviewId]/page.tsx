@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { GetInterviewData } from '../../../../action/get.interview'
 import Webcam from 'react-webcam'
 import { Lightbulb, StickyNote } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -31,10 +30,19 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     }, [])
 
     const getData = async () => {
-        const data = await GetInterviewData({
-            interviewId: params.interviewId
-        }) as InterViewData
-        setInterviewData(data)
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/${params.interviewId}`,  {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            })
+            const data = await response.json();
+            setInterviewData(data)
+        } catch (err) {
+            console.error('Error occurred while fetching interview data:', err);
+        }
     }
 
     return (
@@ -48,8 +56,10 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
                             <CardContent className='p-6'>
                                 <h2 className='text-3xl font-bold mb-4'>Job Description</h2>
                                 <p className='mb-4 text-lg'><strong>Position:</strong> {interviewData?.jobPosition}</p>
-                                <p className='mb-4 text-lg'><strong>Experience:</strong> {interviewData?.jobExperience}</p>
-                                <p className='text-lg'><strong>Job Description:</strong> {interviewData?.jobDesc}</p>
+                                <p className='mb-4 text-lg'><strong>Experience:</strong> {interviewData?.jobExperience} Years</p>
+                                <p className='mb-4 text-lg break-words'><strong>Company Info:</strong> {interviewData?.companyInfo}</p>
+                                <p className='mb-4 text-lg break-words'><strong>Additional Details:</strong> {interviewData?.additionalDetails}</p>
+                                <p className='mb-4 text-lg'><strong>Language:</strong> {interviewData?.interviewLanguage}</p>
                             </CardContent>
                         </Card>
                         <Card className='border-black border-2 bg-yellow-300 shadow-lg'>

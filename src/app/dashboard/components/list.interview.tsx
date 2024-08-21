@@ -1,31 +1,46 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import CardInterview from './card.interview';
-import { GetAllInterviewData } from '@/action/get.interview';
-import { useClerk } from '@clerk/nextjs';
 import { FileQuestion } from 'lucide-react';
 import { InterViewData } from '@/utils/type';
+import { useAuth } from '@/context/auth.context';
 
 const ListInterview = () => {
-  const { user } = useClerk();
+  const { user } = useAuth();
   const [interviewList, setInterviewList] = useState<InterViewData[]>([]);
 
   useEffect(() => {
     const getInterviewList = async () => {
-      const res = await GetAllInterviewData({
-        userId: user?.id as string,
-      });
-      if (res) {
-        setInterviewList(res as InterViewData[]);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/user/${user?.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data)
+        setInterviewList(data as InterViewData[]);
+      } catch (error) {
+        console.error("Error fetching interview data: ", error);
       }
     };
-    getInterviewList();
+  
+    if (user?.id) {
+      getInterviewList();
+    }
   }, [user?.id]);
-
+  
+  
   return (
-    <div className=' relative w-full h-full mb-4'>
+    <div className='w-full mb-4'>
       <h2 className='text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2'>Interviews</h2>
-      <div className='flex flex-col lg:flex-row gap-4 mb-4'>
+      <div className='grid grid-cols-4 gap-4 mb-4'>
         {interviewList.length > 0 ? (
           interviewList.map((interview: InterViewData) => (
             <CardInterview
@@ -35,12 +50,12 @@ const ListInterview = () => {
               experience={interview.jobExperience}
               questions={interview.jsonMockResp}
               time={interview.createdAt?.toLocaleString() || ''}
-              mockId={interview?.mockId as string}
+              mockId={interview?.id as string}
             />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center absolute w-full h-full text-gray-500 dark:text-gray-400">
-            <FileQuestion size={48} className="mt-10 w-36 h-36" />
+          <div className="flex flex-col items-center justify-center pr-8 absolute w-full h-full text-gray-500">
+            <FileQuestion size={48} className="mt-24 w-36 h-36" />
             <p className='font-medium text-3xl'>No interviews available</p>
           </div>
         )}

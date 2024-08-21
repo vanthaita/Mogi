@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { getFeedBackData } from '@/action/get.feedback'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
@@ -13,10 +12,15 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getFeedBackData({
-                interviewId: params.interviewId
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/feedback/${params.interviewId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
             })
-            setFeedBackData(data?.userAnswers as FeedBackData[])
+            const data = await response.json();
+            setFeedBackData(data.userAnswers);
         }
 
         fetchData();
@@ -64,7 +68,7 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
                         Next Question
                     </Button>
                 }
-                {currentQuestionIndex === feedBackData?.length - 1 || feedBackData.length === 0 &&
+                {currentQuestionIndex === feedBackData?.length - 1  &&
                     <Button
                         variant='neutral'
                         onClick={() => router.push(`/dashboard`)}
