@@ -1,12 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import QuestionSection from './components/question.section';
-import { GetInterviewData } from '@/action/get.interview';
 import RecordAnswerSection from './components/record.answer.section';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
-import { Lightbulb } from 'lucide-react';
+import { AwardIcon, Lightbulb } from 'lucide-react';
 import { InterviewQuestion, InterViewData } from '@/utils/type';
 
 const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
@@ -14,19 +13,28 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [mockInterviewQuestions, setMockInterviewQuestions] = useState<InterviewQuestion[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const router = useRouter();
-
+    console.log(interviewData)
     useEffect(() => {
         getData();
     }, []);
 
     const getData = async () => {
-        const data = await GetInterviewData({
-            interviewId: params.interviewId,
-        }) as InterViewData;
-        const parsedQuestions = JSON.parse(data.jsonMockResp).questions as InterviewQuestion[];
-        console.log(parsedQuestions);
-        setMockInterviewQuestions(parsedQuestions);
-        setInterviewData(data);
+        console.log("interview data:" , params.interviewId)
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/${params.interviewId}`,  {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            })
+            const data = await response.json();
+            const parsedQuestions = JSON.parse(data.jsonMockResp).questions as InterviewQuestion[];
+            setMockInterviewQuestions(parsedQuestions);
+            setInterviewData(data);
+        } catch (err) {
+            console.error('Error occurred while fetching interview data:', err);
+        }
     };
 
     return (

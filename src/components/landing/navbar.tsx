@@ -4,10 +4,10 @@ import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useAuth } from '@/context/auth.context'
 
 const Navbar = () => {
-  const { user } = useClerk();
-
+  const {user} = useAuth();
   return (
     <nav className="border-2 border-black bg-white mx-auto max-w-[1426px] w-[calc(100%-20px)] fixed left-1/2 transform -translate-x-1/2 top-2 z-[9999] rounded-3xl shadow-[4px_6px_rgba(0,0,0)]">
       <div className="container mx-auto flex justify-between items-center py-1 md:py-2 px-4">
@@ -65,10 +65,10 @@ const Navbar = () => {
             className="inline-flex items-center gap-x-2 rounded-md text-sm font-medium px-4 py-2 text-black "
           >
             <Avatar>
-              <AvatarImage src={user.imageUrl} />
+              <AvatarImage src={user.picture} />
               <AvatarFallback>SB</AvatarFallback>
             </Avatar>
-            <span className="text-xl ml-2 uppercase">{user?.username}</span>
+            <span className="text-xl ml-2 uppercase">{user?.name}</span>
           </Link>
         )}
       </div>

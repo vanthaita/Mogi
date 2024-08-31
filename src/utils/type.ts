@@ -1,6 +1,6 @@
 export interface InterviewQuestion {
     question: string;
-    Answer: string;
+    answer: string;
 }
 
 export interface QuestionSectionProps {
@@ -13,7 +13,6 @@ export interface RecordAnswerSectionProps {
     activeQuestionIndex: number;
     interviewData: any;
 }
-
 
 
 export interface FeedBackData {
@@ -36,11 +35,13 @@ export interface InterViewData {
     jobExperience: string;
     jobPosition: string;
     jsonMockResp: string;
+    companyInfo?:   String;
+    interviewLanguage?: String;
+    additionalDetails?: String;
     userId: string;
     mockId?: string;
     createdAt?: Date;
     updatedAt?: Date;
-
 }
 
 export interface FeedbackItemProps {
@@ -48,4 +49,24 @@ export interface FeedbackItemProps {
     index: number;
     getRatingColor: (rating: number) => string;
     getUserAnswerColor: (rating: number) => string;
+}
+
+
+export interface User {
+    id: string;
+    name: string;
+    familyName: string;
+    givenName: string;
+    email: string;
+    providerId: string;
+    picture: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+export interface AuthContextProps {
+    user: User | null;
+    token: string;
+    setToken: (value: string) => void
+    isLoggedIn: boolean;
+    logout: () => void;
 }

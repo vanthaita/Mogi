@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
 import 'regenerator-runtime/runtime';
 import { Inter as FontSans } from "next/font/google"
-
+import { AuthProvider } from "@/context/auth.context";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/landing/navbar";
+import { cookies } from "next/headers";
+import RefreshToken from "@/components/refresh.token";
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -19,18 +21,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const token = cookieStore.get("access_token");
   return (
-
-    <ClerkProvider>
+    <AuthProvider initialToken={token?.value as string}>
       <html lang="en">
         <body  className={cn(
             "min-h-screen bg-background font-sans antialiased",
             fontSans.variable
           )}>
-            
             {children}
+            {token && <RefreshToken />}
           </body>
       </html>
-    </ClerkProvider>
+    </AuthProvider>
+    
   );
 }

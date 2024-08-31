@@ -1,3 +1,4 @@
+'use client'
 import Benefit from "@/components/landing/benefit";
 import Footer from "@/components/landing/footer";
 import Hero from "@/components/landing/hero";
@@ -6,6 +7,7 @@ import Questions from "@/components/landing/questions";
 import Marquee from "react-fast-marquee";
 import { UserCheck, MessageCircle, Briefcase } from "lucide-react";
 import Navbar from "@/components/landing/navbar";
+
 
 export default function Home() {
   return (

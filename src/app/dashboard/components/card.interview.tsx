@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,12 @@ const CardInterview = ({ role, techStack, experience, questions, time, mockId}: 
     time: string;
     mockId: string;
 }) => {
-    const questionsJson = JSON.parse(questions)
+    let parsedQuestions;
+    try {
+        parsedQuestions = JSON.parse(questions);
+    } catch (e) {
+        console.error('Failed to parse JSON:', e);
+    }
     return (
         <Card className='p-4 border-4 border-black bg-white lg:w-[24rem] h-[14.5rem] w-[22rem]'>
             <div className='flex flex-col gap-4 mb-4'>
@@ -20,8 +26,6 @@ const CardInterview = ({ role, techStack, experience, questions, time, mockId}: 
                         <span className='text-sm font-semibold text-black'>Job Position/Role:</span>
                         <span className='text-sm text-black'>{role}</span>
                     </div>
-                    
-
                     <div className='flex items-center gap-2'>
                         <span className='text-sm font-semibold text-black'>Tech Stack:</span>
                         <span className='text-sm text-black'>{techStack}</span>
@@ -32,13 +36,12 @@ const CardInterview = ({ role, techStack, experience, questions, time, mockId}: 
                         <span className='text-sm text-black'>{experience}</span>
                     </div>
                 </div>
-
-                
                 <div className='flex flex-col gap-2'>
-                    <span className='text-sm font-semibold text-black'>Questions: {questionsJson.questions.length}</span>
+                    <span className='text-sm font-semibold text-black'>
+                        Questions: {parsedQuestions?.questions.length || 'NULL'}
+                    </span>
                     <span className='text-sm font-semibold text-black'>Create at: {time}</span>
                 </div>
-
                 <div className='flex justify-end items-center gap-4 mb-4'>
                     <Link href={`/dashboard/interview/${mockId}/feedback`}>
                         <Button variant='neutral' className='bg-blue-300'>Feedback</Button>

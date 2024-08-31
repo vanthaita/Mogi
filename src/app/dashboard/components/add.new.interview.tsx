@@ -12,85 +12,66 @@ import {
 import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { chatSession } from '../../../utils/gemini.ai'
 import { useRouter } from 'next/navigation'
-import { useClerk } from '@clerk/nextjs'
-import { saveInterviewData } from '@/action/save.interview'
 import {
   ContextMenu,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
 import { Loader2, Plus } from 'lucide-react'
 import Image from 'next/image'
+import { useAuth } from '@/context/auth.context'
 const AddNewInterview = () => {
   const [openAddNewInterview, setOpenAddNewInterview] = useState(false)
   const [jobPosition, setJobPosition] = useState('')
   const [jobDescription, setJobDescription] = useState('')
   const [experience, setExperience] = useState('')
-  const [companyInfo, setCompanyInfo] = useState('') // New state for company info
-  const [interviewLanguage, setInterviewLanguage] = useState('') // New state for interview language
-  const [additionalDetails, setAdditionalDetails] = useState('') // New state for additional details
+  const [companyInfo, setCompanyInfo] = useState('') 
+  const [interviewLanguage, setInterviewLanguage] = useState('') 
+  const [additionalDetails, setAdditionalDetails] = useState('') 
   const [loading, setLoading] = useState(false)
-  const [jsonResponse, setJsonResponse] = useState([])
-  const { user } = useClerk()
+  const { user } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async () => {
-    setLoading(true)
-    const interviewData = {
-      jobPosition,
-      jobDescription,
-      experience,
-      companyInfo, // Include company info in the data
-      interviewLanguage, // Include interview language in the data
-      additionalDetails, // Include additional details in the data
-    }
-
-    const InputPromptTemplate = process.env.NEXT_PUBLIC_INPUT_PROMPT || ""
-    const InputPrompt = InputPromptTemplate
-      .replace('{{jobPosition}}', jobPosition)
-      .replace('{{jobDescription}}', jobDescription)
-      .replace('{{experience}}', experience)
-      .replace('{{companyInfo}}', companyInfo)
-      .replace('{{interviewLanguage}}', interviewLanguage)
-      .replace('{{additionalDetails}}', additionalDetails)
-    
+    setLoading(true);
     try {
-      // Send a message to the chatbot to generate mock interview questions
-      const res = await chatSession.sendMessage(InputPrompt)
-      const MockJsonResponse = JSON.parse(res.response.text())
-      setJsonResponse(MockJsonResponse)
-
-      if (MockJsonResponse && user && user.id) {
-        const response = await saveInterviewData({
-          userId: user.id as string,
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           jobPosition,
           jobDesc: jobDescription,
           jobExperience: experience,
-          // companyInfo,
-          // interviewLanguage,
-          // additionalDetails,
-          jsonMockResp: JSON.stringify(MockJsonResponse),
-        })
-        console.log(response)
-        if (response) {
-          router.push(`/dashboard/interview/${response}`)
-        } else {
-          console.error('Failed to save interview')
-        }
+          companyInfo,
+          interviewLanguage,
+          additionalDetails,
+          userId: user?.id,
+        }),
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save interview');
+      }
+      const data = await response.json();
+      if (data) {
+        router.push(`/dashboard/interview/${data.interviewId}`);
+      } else {
+        console.error('Failed to save interview');
       }
     } catch (error) {
-      console.error('Error occurred while processing the interview data:', error)
+      console.error('Error occurred while processing the interview data:', error);
     } finally {
-      setJobPosition('')
-      setJobDescription('')
-      setExperience('')
-      setCompanyInfo('')
-      setInterviewLanguage('')
-      setAdditionalDetails('')
-      setLoading(false)
+      setJobPosition('');
+      setJobDescription('');
+      setExperience('');
+      setCompanyInfo('');
+      setInterviewLanguage('');
+      setAdditionalDetails('');
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className='mt-4'>
