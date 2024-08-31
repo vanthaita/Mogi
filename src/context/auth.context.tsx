@@ -18,7 +18,7 @@ export function AuthProvider({
     const router = useRouter()
     useEffect(() => { 
         const fetchProfileOnce = async () => {
-        if (user || !token) return router.push('/sign-in'); 
+        if (user || !token) return; 
           try {
               const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/profile`, {
                 method: 'GET',
@@ -26,7 +26,7 @@ export function AuthProvider({
               });
 
               if (!res.ok) {
-              throw new Error('Failed to fetch user profile');
+                throw new Error('Failed to fetch user profile');
               }
 
               const userProfile = await res.json();

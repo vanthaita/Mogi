@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     dark:bg-neutral-500 min-h-screen flex items-center justify-center border-none">
       <div className="container px-4 py-3 lg:px-8 mx-auto">
         <Card className="w-full py-10 px-8 xl:p-12 text-base bg-white 
-          dark:bg-neutral-600 grid grid-cols-1 lg:grid-cols-3 space-x-8">
+          dark:bg-neutral-600 grid grid-cols-1 lg:grid-cols-3 space-x-8 relative">
           {children}
           <div className="relative max-lg:hidden lg:col-span-2">
             <Card className="w-full rounded-xl dark:bg-opacity-10 min-h-[75vh] px-8 
@@ -25,15 +25,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                         alt="main-page"
                         className="w-full h-full border-4 mt-8"
                       />
-                      
-                      {/* <img src="/img/login/chart.png" alt="cover" className="max-w-full border border-black rounded-lg shadow-[3px_3px_0_0_#000000]" /> */}
                   </div>
-                  {/* <img src="/img/login/widget.png" alt="cover" className="absolute right-0 top-0 max-w-full border border-black rounded-lg shadow-[3px_3px_0_0_#000000]" /> */}
-                  {/* <img src="/img/login/map.png" alt="cover" className="absolute max-xl:hidden right-4 bottom-0 max-w-full border border-black rounded-lg shadow-[3px_3px_0_0_#000000]" /> */}
                 </div>
               </div>
             </Card>
           </div>
+          <p className='text-gray-700 absolute bottom-6 left-0 right-0 text-start mx-auto overflow-hidden'>
+            @2024 Mogi All rights reserved
+          </p>
         </Card>
       </div>
     </Card>

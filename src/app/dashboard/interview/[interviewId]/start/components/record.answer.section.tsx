@@ -113,7 +113,7 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
             </div>
             <div className="w-full flex items-center justify-center mb-10">
                 <Button variant="neutral" onClick={saveUserAnswer} 
-                    disabled={isLoading || isRecording}
+                    disabled={isLoading && isRecording}
                 >
                     {isLoading ? (
                         <span>Saving...</span>

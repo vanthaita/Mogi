@@ -25,7 +25,6 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
 
         fetchData();
     }, [params.interviewId])
-    console.log("Feedback: " ,feedBackData)
     const getRatingColor = (rating: number) => {
         if (rating >= 8) return 'bg-green-500';
         if (rating >= 5) return 'bg-yellow-500';
@@ -51,7 +50,7 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
                     />
                 )}
             </div>
-            <div className='w-full flex justify-end gap-4'>
+            <div className='w-full flex justify-end gap-4 mt-4'>
                 {currentQuestionIndex > 0 && feedBackData.length !== 0 && 
                     <Button
                         variant='neutral'

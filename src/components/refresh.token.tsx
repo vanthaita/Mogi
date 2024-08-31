@@ -1,4 +1,5 @@
 'use client'
+import { setTokenFromCookies } from '@/app/action/removeRt';
 import { useAuth } from '@/context/auth.context';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -15,6 +16,7 @@ const RefreshToken = () => {
     const currentTime = Date.now();
     return exp - currentTime < 10 * 60 * 1000;
   };
+  console.log(token);
   const handleLogout = async () => {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/logout`, {
@@ -41,6 +43,7 @@ const RefreshToken = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data)
+        setTokenFromCookies(token);
         setToken(data.access_token);
       } else {
         if (response.status === 401) {
@@ -65,7 +68,7 @@ const RefreshToken = () => {
     }, 5 * 60 * 1000); 
 
     return () => clearInterval(intervalId);
-  }, [token]);
+  }, []);
 
   return null; 
 };
