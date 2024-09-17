@@ -5,21 +5,18 @@ import RecordAnswerSection from './components/record.answer.section';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
-import { AwardIcon, Lightbulb } from 'lucide-react';
+import { Lightbulb } from 'lucide-react';
 import { InterviewQuestion, InterViewData } from '@/utils/type';
-
 const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [interviewData, setInterviewData] = useState<InterViewData | null>(null);
     const [mockInterviewQuestions, setMockInterviewQuestions] = useState<InterviewQuestion[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const router = useRouter();
-    console.log(interviewData)
     useEffect(() => {
         getData();
     }, []);
 
     const getData = async () => {
-        console.log("interview data:" , params.interviewId)
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/${params.interviewId}`,  {
                 method: "GET",
@@ -39,8 +36,8 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
 
     return (
         <div className="w-full h-full relative">
-            <Card className="w-full h-full flex flex-col md:flex-row justify-between gap-4 bg-white">
-                <div className="md:w-1/2 w-full h-full md:p-10 p-4 gap-y-2 flex flex-col justify-between bg-white border-r-4">
+            <div className="w-full h-full flex flex-col md:flex-row justify-between gap-4 bg-white">
+                <div className="md:w-1/2 w-full h-full md:p-10 p-4 gap-y-2 flex flex-col justify-between bg-white ">
                     <QuestionSection
                         mockInterviewQuestions={mockInterviewQuestions}
                         activeQuestionIndex={currentQuestionIndex}
@@ -88,7 +85,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
                         interviewData={interviewData}
                     />
                 </div>
-            </Card>
+            </div>
         </div>
     );
 };

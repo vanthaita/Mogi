@@ -46,12 +46,11 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     }
 
     return (
-        <div className='w-full h-full p-8 '>
+        <div className='w-full h-full md:p-8 p-4'>
             <div className='flex flex-col w-full h-full gap-x-4'>
                 <span className='font-bold text-4xl text-center mb-8'>Let&apos;s Get Started with Your Mock Interview</span>
                 <div className='flex flex-col lg:flex-row w-full h-full gap-8'>
-                    {/* Job Description & Details */}
-                    <div className=' w-2/3 h-full flex flex-col gap-8 justify-between'>
+                    <div className='md:w-2/3 w-full h-full flex flex-col gap-8 justify-between'>
                         <Card className='border-black border-2 bg-white shadow-lg h-2/3'>
                             <CardContent className='p-6'>
                                 <h2 className='text-3xl font-bold mb-4'>Job Description</h2>
@@ -75,18 +74,16 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
                             </CardContent>
                         </Card>
                     </div>
-                    {/* Webcam & Notes */}
-                    <div className='flex flex-col w-2/3 h-full'>
-                    {/* Webcam Section */}
+                    <div className='flex flex-col md:w-2/3 w-full h-full'>
                     <Card className='flex-1 flex flex-col items-center justify-between w-full h-full'>
                         <div className='w-full h-full bg-gray-200 relative flex items-center justify-center rounded-lg mb-6'>
                             {isWebcamActive ? (
                                 <Webcam 
-                                    className='max-w-full max-h-full w-auto h-auto rounded-lg object-contain' 
+                                    className='max-w-full max-h-full w-auto h-auto rounded-lg object-contain mt-6' 
                                     style={{ width: '640px', height: '480px' }} 
                                 />
                             ) : (
-                                <div className=' flex flex-col justify-center items-center'>
+                                <div className=' flex flex-col justify-center items-center md:mt-0 mt-2'>
                                     <Image 
                                         src='/cam.svg'
                                         height={200}

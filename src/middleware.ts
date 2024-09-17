@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
         );
         const exp = payload.exp * 1000;
         const currentTime = Date.now();
-        const isTokenExpiringSoon = exp - currentTime < 3 * 24 * 60 * 60 * 1000; // 3 days
+        const isTokenExpiringSoon = exp - currentTime < 3 * 24 * 60 * 60 * 1000;
         
         if (isTokenExpiringSoon) {
           removeTokenFromCookies();
