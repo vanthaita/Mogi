@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import useSpeechToText from 'react-hook-speech-to-text';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Mic } from 'lucide-react';
+import { Car, Mic } from 'lucide-react';
 import Image from 'next/image';
 import { InterviewQuestion } from '@/utils/type';
 import { RecordAnswerSectionProps } from '@/utils/type';
@@ -41,7 +41,7 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
     const saveUserAnswer = async () => {
         if (isRecording) {
             stopSpeechToText();
-            if (userAnswer.length < 1) {
+            if (userAnswer.length < 10) {
                 return;
             }
             setIsLoading(true);
@@ -94,21 +94,23 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
     return (
         <div className="w-full h-full flex flex-col items-center justify-center">
             <div className='w-full h-full relative flex items-center justify-center rounded-lg '>
-                {true ? (
+                {webcamRef.current && webcamRef.current.stream  ? (
                     <Webcam 
                         className='max-w-full max-h-full w-auto h-auto rounded-lg object-contain' 
                         style={{ width: '640px', height: '480px' }} 
                     />
                 ) : (
-                    <div className=' flex flex-col justify-center items-center'>
-                        <Image 
-                            src='/cam.svg'
-                            height={200}
-                            width={200}
-                            alt='cam'
-                        />
-                        <span className='text-gray-500 mt-4'>Webcam Preview</span>
-                    </div>
+                    <Card style={{ width: '640px', height: '480px' }} className='flex flex-col justify-center items-center bg-white'>
+                        <div className=' flex flex-col justify-center items-center'>
+                            <Image 
+                                src='/cam.svg'
+                                height={200}
+                                width={200}
+                                alt='cam'
+                            />
+                            <span className='text-gray-500 mt-4'>Webcam Preview</span>
+                        </div>
+                    </Card>
                 )}
             </div>
             <div className="w-full flex items-center justify-center mb-10">

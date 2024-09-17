@@ -24,7 +24,6 @@ const ListInterview = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data)
         setInterviewList(data as InterViewData[]);
       } catch (error) {
         console.error("Error fetching interview data: ", error);
@@ -40,7 +39,7 @@ const ListInterview = () => {
   return (
     <div className='w-full mb-4'>
       <h2 className='text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2'>Interviews</h2>
-      <div className='grid grid-cols-4 gap-4 mb-4'>
+      <div className='flex flex-wrap gap-4 mb-4 mx-auto'>
         {interviewList.length > 0 ? (
           interviewList.map((interview: InterViewData) => (
             <CardInterview

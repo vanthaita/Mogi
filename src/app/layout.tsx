@@ -23,6 +23,7 @@ export default function RootLayout({
 }>) {
   const cookieStore = cookies();
   const token = cookieStore.get("access_token");
+  
   return (
     <AuthProvider initialToken={token?.value as string}>
       <html lang="en">
