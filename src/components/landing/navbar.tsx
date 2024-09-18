@@ -1,5 +1,4 @@
 'use client'
-import { useClerk } from '@clerk/nextjs'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
