@@ -15,9 +15,6 @@ export default function SignUpPage() {
     window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}auth/google`;
   };
 
-  const handleGithubLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}auth/github`;
-  };
 
   const handleSignup = async () => {
     setLoading(true);
