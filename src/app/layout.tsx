@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "@/components/landing/navbar";
 import { cookies } from "next/headers";
 import RefreshToken from "@/components/refresh.token";
-
+import { Analytics } from "@vercel/analytics/react"
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -33,6 +33,7 @@ export default function RootLayout({
           )}>
             {children}
             {token && <RefreshToken />}
+            <Analytics />
           </body>
       </html>
     </AuthProvider>
