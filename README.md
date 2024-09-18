@@ -49,18 +49,8 @@ Environment Variables
 Create a .env.local file in the root directory and add the necessary environment variables:
 
 ```bash
-NEXT_PUBLIC_SERVER_URL=<your-gemini-api-key>
-```
-Replace <your-clerk-frontend-api>, <your-database-url>, and <your-gemini-api-key> with your actual credentials.
-Database Migration
+NEXT_PUBLIC_SERVER_URL=<url>
 
-Run the Prisma migrations to set up your database schema:
-
-```bash
-
-npx prisma migrate dev
-
-```
 Learn More
 
 To learn more about the technologies used in this project, take a look at the following resources:
