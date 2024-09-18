@@ -1,4 +1,3 @@
-import { SignIn } from "@clerk/nextjs";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 
