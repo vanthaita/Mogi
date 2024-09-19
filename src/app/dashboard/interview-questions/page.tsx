@@ -34,7 +34,7 @@ const InterviewQuestionList: React.FC = () => {
   useEffect(() => {
     const getInterviewList = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/search`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/search`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

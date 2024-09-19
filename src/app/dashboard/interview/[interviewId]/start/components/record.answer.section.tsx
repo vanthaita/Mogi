@@ -45,7 +45,7 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
                 return;
             }
             setIsLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/feedback`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/feedback`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

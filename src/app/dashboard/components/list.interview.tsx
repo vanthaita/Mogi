@@ -12,7 +12,7 @@ const ListInterview = () => {
   useEffect(() => {
     const getInterviewList = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/user/${user?.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/user/${user?.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
