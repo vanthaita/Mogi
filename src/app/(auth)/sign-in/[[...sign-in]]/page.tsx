@@ -12,14 +12,14 @@ export default function SignUpPage() {
   const router = useRouter();
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/google`;
   };
 
 
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/sign-in`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-in`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,8 +33,7 @@ export default function SignUpPage() {
       }
 
       const data = await response.json();
-
-      router.replace('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.error('Error during sign-up:', error);
     } finally {

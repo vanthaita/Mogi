@@ -31,7 +31,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/${params.interviewId}`,  {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/${params.interviewId}`,  {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

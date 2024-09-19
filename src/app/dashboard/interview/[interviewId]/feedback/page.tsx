@@ -12,7 +12,7 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/feedback/${params.interviewId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/feedback/${params.interviewId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -35,7 +35,7 @@ const AddNewInterview = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}interview/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

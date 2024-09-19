@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               </div>
             </Card>
           </div>
-          <p className='text-gray-700 absolute bottom-6 left-0 right-0 text-start mx-auto overflow-hidden'>
+          <p className='mt 4 text-gray-700 absolute bottom-6 left-0 right-0 text-start mx-auto overflow-hidden'>
             @2024 Mogi All rights reserved
           </p>
         </Card>

@@ -13,13 +13,13 @@ export default function SignUpPage() {
   const router = useRouter();
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/google`;
   };
 
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/sign-up`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-up`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
