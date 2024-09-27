@@ -9,14 +9,14 @@ function setTokenCookies(atToken: string, rt_token: string) {
         secure: true,   
         maxAge: 60 * 24,  
         path: "/",      
-        sameSite: "lax",
+        sameSite: "none",
     });
     cookies().set('refresh_token', rt_token, {
         httpOnly: true,  
         secure: true,   
         maxAge: 60 * 24,  
         path: "/",      
-        sameSite: "lax",
+        sameSite: "none",
     });
 }
 function setTokenFromCookies(token: string) {
@@ -25,7 +25,7 @@ function setTokenFromCookies(token: string) {
         secure: true,   
         maxAge: 60 * 24,  
         path: "/",      
-        sameSite: "lax",
+        sameSite: "none",
     });
 }
 function removeTokenFromCookies() {

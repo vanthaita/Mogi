@@ -20,7 +20,6 @@ export default function SignUpPage() {
 
   const handleSignIn = async () => {
     setLoading(true);
-    setIsError(false);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-in`, {
         method: 'POST',
@@ -31,14 +30,10 @@ export default function SignUpPage() {
         credentials: 'include',
       });
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Login failed:', errorData);
         setIsError(true);
-        return;
-      }
+      } 
       const data = await response.json();
       await setTokenCookies(data.access_token, data.refresh_token);
-      
       const profile = await fetchProfileOnce();
       if (profile) {
         setUser(profile);
@@ -46,16 +41,14 @@ export default function SignUpPage() {
         router.push('/dashboard');
       } else {
         setIsLoggedIn(false);
-        setIsError(true); 
       }
     } catch (error) {
       console.error('Error during sign-in:', error);
       setIsError(true);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
-  
   
   
   return (
