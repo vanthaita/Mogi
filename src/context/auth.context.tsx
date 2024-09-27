@@ -5,6 +5,25 @@ import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+export const fetchProfileOnce = async () => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/profile`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+
+    const userProfile = await res.json();
+    return userProfile;
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return null;
+  }
+};
+
 export function AuthProvider({
   children,
   initialToken,
@@ -12,55 +31,42 @@ export function AuthProvider({
   children: ReactNode;
   initialToken: string;
 }) {
-    const [user, setUser] = useState<User | null>(null); 
-    const [token, setToken] = useState(initialToken);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const router = useRouter()
-    useEffect(() => { 
-        const fetchProfileOnce = async () => {
-        if (user || !token) return; 
-          try {
-              const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/profile`, {
-                method: 'GET',
-                credentials: 'include',
-              });
+  const [user, setUser] = useState<User | null>(null); 
+  const [token, setToken] = useState(initialToken);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!initialToken);
 
-              if (!res.ok) {
-                throw new Error('Failed to fetch user profile');
-              }
-
-              const userProfile = await res.json();
-              setUser(userProfile);
-              setIsLoggedIn(true);
-          } catch (error) {
-              console.error('Error fetching profile:', error);
-              setIsLoggedIn(false);
-              setUser(null); 
-          }
-        };
-
-        fetchProfileOnce(); 
-    }, [token, user]);
-
-    const handleSetToken = (value: string) => {
-        setToken(value);
-        if (!value) {
-            setIsLoggedIn(false);
-            setUser(null);
+  useEffect(() => {
+    if (token) {
+      fetchProfileOnce().then(profile => {
+        if (profile) {
+          setUser(profile);
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
         }
-    };
+      });
+    }
+  }, [token]);
 
-    const logout = async () => {
-        setUser(null);
-        setToken('');
-        setIsLoggedIn(false);
-    };
+  const handleSetToken = (value: string) => {
+    setToken(value);
+    if (!value) {
+      setIsLoggedIn(false);
+      setUser(null);
+    }
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, setToken: handleSetToken, token, isLoggedIn, logout }}>
-        {children}
-        </AuthContext.Provider>
-    );
+  const logout = async () => {
+    setUser(null);
+    setToken('');
+    setIsLoggedIn(false);
+  };
+  
+  return (
+    <AuthContext.Provider value={{ user, setToken: handleSetToken, token, isLoggedIn, logout, setUser, setIsLoggedIn }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => {

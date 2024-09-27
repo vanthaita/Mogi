@@ -69,4 +69,6 @@ export interface AuthContextProps {
     setToken: (value: string) => void
     isLoggedIn: boolean;
     logout: () => void;
+    setUser: (user: User) => void;
+    setIsLoggedIn: (_: boolean) => void;
 }
