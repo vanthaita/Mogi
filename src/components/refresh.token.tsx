@@ -1,5 +1,5 @@
 'use client'
-import { setTokenFromCookies } from '@/app/action/removeRt';
+import { setTokenFromCookies } from '@/app/action/storeToken';
 import { useAuth } from '@/context/auth.context';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -12,28 +12,33 @@ const RefreshToken = () => {
     if (!token) return false;
 
     const payload = JSON.parse(atob(token.split('.')[1]));
-    const exp = payload.exp * 1000;
+    const exp = payload.exp * 1000; 
     const currentTime = Date.now();
+    console.log(payload, exp, currentTime);
     return exp - currentTime < 10 * 60 * 1000;
   };
-  console.log(token);
+
   const handleLogout = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}auth/logout`, {
-            method: 'GET',
-            mode: 'no-cors',
-            credentials: 'include',
-        });
-        if (response) {
-          logout();
-          return router.push('/');
-        } else {
-            console.error('Logout failed:', response);
-        }
-      } catch (err) {
-        console.error('Failed to log out:', err);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (response.ok) {
+        await logout();
+        router.push('/');
+      } else {
+        console.error('Logout failed:', response);
+        await logout();
+        router.push('/sign-in');
       }
-  }
+    } catch (err) {
+      console.error('Failed to log out:', err);
+      await logout();
+      router.push('/sign-in');
+    }
+  };
+
   const refreshAccessToken = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/check-token`, {
@@ -42,21 +47,16 @@ const RefreshToken = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
-        setTokenFromCookies(token);
-        setToken(data.access_token);
+        setTokenFromCookies(data.access_token);
+        setToken(data.access_token); 
       } else {
         if (response.status === 401) {
-            handleLogout()
-            logout();
-            router.push('/sign-in');
+          handleLogout();
         }
       }
     } catch (error) {
-        console.error('Error refreshing token:', error);
-        handleLogout();
-        logout();
-        router.push('/sign-in');
+      console.error('Error refreshing token:', error);
+      handleLogout();
     }
   };
 
@@ -67,8 +67,8 @@ const RefreshToken = () => {
       }
     }, 5 * 60 * 1000); 
 
-    return () => clearInterval(intervalId);
-  }, []);
+    return () => clearInterval(intervalId); 
+  }, [token]);
 
   return null; 
 };

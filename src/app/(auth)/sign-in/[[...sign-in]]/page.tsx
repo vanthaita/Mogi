@@ -5,19 +5,22 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { setTokenCookies } from '@/app/action/storeToken';
+import { fetchProfileOnce, useAuth } from '@/context/auth.context';
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const {setUser, setIsLoggedIn} = useAuth();
   const router = useRouter();
-
+  const [isError, setIsError] = useState(false);
   const handleGoogleLogin = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/google`;
   };
 
-
-  const handleSignup = async () => {
+  const handleSignIn = async () => {
     setLoading(true);
+    setIsError(false);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-in`, {
         method: 'POST',
@@ -27,20 +30,34 @@ export default function SignUpPage() {
         body: JSON.stringify({ email, password }),
         credentials: 'include',
       });
-
       if (!response.ok) {
-        throw new Error('Sign Up failed');
+        const errorData = await response.json();
+        console.error('Login failed:', errorData);
+        setIsError(true);
+        return;
       }
-
       const data = await response.json();
-      router.push('/dashboard');
+      await setTokenCookies(data.access_token, data.refresh_token);
+      
+      const profile = await fetchProfileOnce();
+      if (profile) {
+        setUser(profile);
+        setIsLoggedIn(true);
+        router.push('/dashboard');
+      } else {
+        setIsLoggedIn(false);
+        setIsError(true); 
+      }
     } catch (error) {
-      console.error('Error during sign-up:', error);
+      console.error('Error during sign-in:', error);
+      setIsError(true);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
-
+  
+  
+  
   return (
     <div className="col-span-1 lg:pe-12">
       <div className="pb-3 mb-8">
@@ -103,10 +120,13 @@ export default function SignUpPage() {
             <span className='text-center text-gray-500 hover:text-blue-500'>Forgot Password?</span>
           </Link>
         </div>
+        <span className={`${isError ? 'text-red-500 font-normal text-xl mb-4 block' : 'hidden'}`}>
+          Error: Incorrect username or password
+        </span>
         <Button 
           className="w-full text-xl bg-blue-500 text-white"
           variant='neutral'
-          onClick={handleSignup}
+          onClick={handleSignIn}
           disabled={loading}
         >
           {loading ? 'Signing In...' : 'Sign In'}

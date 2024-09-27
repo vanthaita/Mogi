@@ -12,21 +12,21 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
         credentials: 'include',
       });
-      if (!response.ok) {
-        console.error('Logout failed:', response);
-        return;
-      }
-      logout();
+      await logout()
       router.push('/sign-in');
-      window.location.reload();
     } catch (err) {
       console.error('Failed to log out:', err);
     }
   };
+  
 
   const sidebarItems = [
     { icon: HomeIcon, label: 'Home', link: '/dashboard' },              

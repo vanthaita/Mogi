@@ -4,6 +4,7 @@ import React from 'react'
 import { Button } from '../ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/context/auth.context'
+import { ArrowBigRight } from 'lucide-react'
 
 const Navbar = () => {
   const {user} = useAuth();
@@ -54,9 +55,12 @@ const Navbar = () => {
         {!user ? (
           <Link
             href="/sign-in"
-            className="py-2.5 px-5 inline-flex items-center gap-x-2 rounded-md text-sm font-medium border border-black bg-lime-200 hover:bg-lime-300 text-black shadow-[4px_4px_0_0_#000000]"
+            className="py-2.5 px-5 inline-flex items-center gap-x-2 rounded-md text-sm font-medium"
           >
-            <span className="hidden md:inline">Sign In</span>
+            <div className='flex justify-center items-center'>
+              <span className="hidden md:inline text-xl">Sign In</span>
+              <ArrowBigRight className='w-6 h-6 ml-2'/>
+            </div>
           </Link>
         ) : (
           <Link
