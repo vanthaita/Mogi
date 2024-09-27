@@ -1,7 +1,6 @@
 'use client';
 import React, { useContext, useState, useEffect, createContext, ReactNode } from 'react';
 import { User, AuthContextProps } from '@/utils/type';
-import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
@@ -9,13 +8,15 @@ export const fetchProfileOnce = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/profile`, {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       credentials: 'include',
     });
-
+    console.log(res);
     if (!res.ok) {
       throw new Error('Failed to fetch user profile');
     }
-
     const userProfile = await res.json();
     return userProfile;
   } catch (error) {
