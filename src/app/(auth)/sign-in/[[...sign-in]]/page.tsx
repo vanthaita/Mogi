@@ -33,7 +33,9 @@ export default function SignUpPage() {
         setIsError(true);
       } 
       const data = await response.json();
-      await setTokenCookies(data.access_token, data.refresh_token);
+      if(data.access_token && data.refresh_token) {
+        await setTokenCookies(data.access_token, data.refresh_token);
+      }
       const profile = await fetchProfileOnce();
       if (profile) {
         setUser(profile);
