@@ -12,6 +12,7 @@ import Webcam from 'react-webcam';
 import { useAuth } from '@/context/auth.context';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '@/helper/axios';
 const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
     interviewData,
     mockInterviewQuestions,
@@ -45,35 +46,29 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
                 return;
             }
             setIsLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/feedback`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            try {
+                const response = await axiosInstance.post('/interview/feedback', {
                     mockId: interviewData.id,
                     question: mockInterviewQuestions[activeQuestionIndex].question,
                     correctAnswer: mockInterviewQuestions[activeQuestionIndex].answer,
                     userAns: userAnswer,
                     userId: user?.id,
-                }),
-                credentials: 'include',
-            }).finally(() => {
-                setIsLoading(false);
-            })
-            if (response.ok) {
-                toast.success('Success to save answer.', {
-                    className: 'border-2 border-black shadow-lg bg-gray-100 text-black p-6 rounded-none',
-                    bodyClassName: 'text-sm font-medium ',
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
                 });
-            } else {
+                if (response.status === 200) {
+                    toast.success('Success to save answer.', {
+                        className: 'border-2 border-black shadow-lg bg-gray-100 text-black p-6 rounded-none',
+                        bodyClassName: 'text-sm font-medium ',
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to save answer:', error);
                 toast.error('Failed to save answer.', {
                     className: 'border-2 border-black shadow-lg bg-gray-100 text-black p-6 rounded-none',
                     bodyClassName: 'text-sm font-medium ',
@@ -85,6 +80,8 @@ const RecordAnswerSection: React.FC<RecordAnswerSectionProps> = ({
                     draggable: true,
                     progress: undefined,
                 });
+            } finally {
+                setIsLoading(false);
             }
         } else {
             startSpeechToText();

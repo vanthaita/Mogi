@@ -20,6 +20,7 @@ import {
 import { Loader2, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth.context'
+import axiosInstance from '@/helper/axios'
 const AddNewInterview = () => {
   const [openAddNewInterview, setOpenAddNewInterview] = useState(false)
   const [jobPosition, setJobPosition] = useState('')
@@ -35,33 +36,23 @@ const AddNewInterview = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          jobPosition,
-          jobDesc: jobDescription,
-          jobExperience: experience,
-          companyInfo,
-          interviewLanguage,
-          additionalDetails,
-          userId: user?.id,
-        }),
-        credentials: 'include',
+      const response = await axiosInstance.post('/interview/create', {
+        jobPosition,
+        jobDesc: jobDescription,
+        jobExperience: experience,
+        companyInfo,
+        interviewLanguage,
+        additionalDetails,
+        userId: user?.id,
       });
-      if (!response.ok) {
-        throw new Error('Failed to save interview');
-      }
-      const data = await response.json();
+      const data = response.data;
       if (data) {
         router.push(`/dashboard/interview/${data.interviewId}`);
       } else {
         console.error('Failed to save interview');
       }
     } catch (error) {
-      console.error('Error occurred while processing the interview data:', error);
+      console.error('Error occurred while processing the interview data:',  error);
     } finally {
       setJobPosition('');
       setJobDescription('');
@@ -72,6 +63,7 @@ const AddNewInterview = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className='mt-4'>

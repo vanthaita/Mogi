@@ -1,6 +1,4 @@
 "use server"
-"use server";
-
 import { cookies } from "next/headers";
 
 function setTokenCookies(atToken: string, rt_token: string) {

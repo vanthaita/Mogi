@@ -4,6 +4,7 @@ import CardInterview from './card.interview';
 import { FileQuestion } from 'lucide-react';
 import { InterViewData } from '@/utils/type';
 import { useAuth } from '@/context/auth.context';
+import axiosInstance from '@/helper/axios';
 
 const ListInterview = () => {
   const { user } = useAuth();
@@ -12,30 +13,18 @@ const ListInterview = () => {
   useEffect(() => {
     const getInterviewList = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/user/${user?.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setInterviewList(data as InterViewData[]);
+        const response = await axiosInstance.get(`/interview/user/${user?.id}`);
+        setInterviewList(response.data as InterViewData[]);
       } catch (error) {
-        console.error("Error fetching interview data: ", error);
+        console.error('Error fetching interview data: ', error);
       }
     };
-  
+
     if (user?.id) {
       getInterviewList();
     }
   }, [user?.id]);
-  
-  
+
   return (
     <div className='w-full mb-4'>
       <h2 className='text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2'>Interviews</h2>

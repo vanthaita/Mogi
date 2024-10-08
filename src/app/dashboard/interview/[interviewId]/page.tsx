@@ -18,6 +18,7 @@ import {
     AlertDialogTrigger,
   } from '@/components/ui/alert-dialog'
 import { InterViewData } from '@/utils/type'
+import axiosInstance from '@/helper/axios'
 
 const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [interviewData, setInterviewData] = useState<InterViewData | null>(null)
@@ -31,17 +32,10 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/${params.interviewId}`,  {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            })
-            const data = await response.json();
-            setInterviewData(data)
+            const response = await axiosInstance.get(`/interview/${params.interviewId}`)
+            setInterviewData(response.data)
         } catch (err) {
-            console.error('Error occurred while fetching interview data:', err);
+            console.error('Error occurred while fetching interview data:', err)
         }
     }
 

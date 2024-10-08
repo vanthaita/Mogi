@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/dist/client/link';
 import Image from 'next/image';
+import axiosInstance from '@/helper/axios';
 export default function SignUpPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,22 +20,12 @@ export default function SignUpPage() {
   const handleSignup = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-up`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-        credentials: 'include',
+      const response = await axiosInstance.post('/auth/sign-up', {
+        name, 
+        email, 
+        password,
       });
-
-      if (!response.ok) {
-        throw new Error('Sign Up failed');
-      }
-      
-      const data = await response.json();
-      console.log(data);
-
+      console.log(response.data);
       router.replace('/sign-in');
     } catch (error) {
       console.error('Error during sign-up:', error);
@@ -42,7 +33,7 @@ export default function SignUpPage() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="col-span-1 lg:pe-12">
   <div className="pb-3 mb-8">

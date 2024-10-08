@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { setTokenCookies } from '@/app/action/storeToken';
 import { fetchProfileOnce, useAuth } from '@/context/auth.context';
+import axiosInstance from '@/helper/axios';
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,28 +22,25 @@ export default function SignUpPage() {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-in`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-      });
-      if (!response.ok) {
+      const response = await axiosInstance.post('/auth/sign-in', {
+        email,
+        password,
+      },);
+      if (response.status !== 200) {
         setIsError(true);
-      } 
-      const data = await response.json();
-      if(data.access_token && data.refresh_token) {
-        await setTokenCookies(data.access_token, data.refresh_token);
-      }
-      const profile = await fetchProfileOnce();
-      if (profile) {
-        setUser(profile);
-        setIsLoggedIn(true);
-        router.push('/dashboard');
       } else {
-        setIsLoggedIn(false);
+        const { access_token, refresh_token } = response.data;
+        if (access_token && refresh_token) {
+          await setTokenCookies(access_token, refresh_token);
+        }
+        const profile = await fetchProfileOnce();
+        if (profile) {
+          setUser(profile);
+          setIsLoggedIn(true);
+          router.push('/dashboard');
+        } else {
+          setIsLoggedIn(false);
+        }
       }
     } catch (error) {
       console.error('Error during sign-in:', error);

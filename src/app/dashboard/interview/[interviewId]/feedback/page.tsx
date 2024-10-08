@@ -1,10 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import FeedbackCard from './components/feedback.card'
 import { FeedBackData } from '@/utils/type'
+import axiosInstance from '@/helper/axios'
 const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
     const [feedBackData, setFeedBackData] = useState<FeedBackData[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -12,19 +12,16 @@ const FeedBackPage = ({ params }: { params: { interviewId: string } }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/feedback/${params.interviewId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            })
-            const data = await response.json();
-            setFeedBackData(data.userAnswers);
-        }
-
+          try {
+            const response = await axiosInstance.get(`/interview/feedback/${params.interviewId}`);
+            setFeedBackData(response.data.userAnswers);
+          } catch (error) {
+            console.error('Error fetching feedback data: ', error);
+          }
+        };
+    
         fetchData();
-    }, [params.interviewId])
+      }, [params.interviewId]);
     const getRatingColor = (rating: number) => {
         if (rating >= 8) return 'bg-green-500';
         if (rating >= 5) return 'bg-yellow-500';

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Lightbulb } from 'lucide-react';
 import { InterviewQuestion, InterViewData } from '@/utils/type';
+import axiosInstance from '@/helper/axios';
 const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [interviewData, setInterviewData] = useState<InterViewData | null>(null);
     const [mockInterviewQuestions, setMockInterviewQuestions] = useState<InterviewQuestion[]>([]);
@@ -18,14 +19,8 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/${params.interviewId}`,  {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            })
-            const data = await response.json();
+            const response = await axiosInstance.get(`/interview/${params.interviewId}`);
+            const data = response.data;
             const parsedQuestions = JSON.parse(data.jsonMockResp).questions as InterviewQuestion[];
             setMockInterviewQuestions(parsedQuestions);
             setInterviewData(data);

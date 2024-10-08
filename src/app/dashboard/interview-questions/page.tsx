@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { InterViewData } from '@/utils/type';
 import { useAuth } from '@/context/auth.context';
 import Link from 'next/link';
+import axiosInstance from '@/helper/axios';
 
 const InterviewCard: React.FC<{ interview: InterViewData }> = ({ interview }) => {
     const mockResponse = JSON.parse(interview.jsonMockResp);
@@ -34,25 +35,16 @@ const InterviewQuestionList: React.FC = () => {
   useEffect(() => {
     const getInterviewList = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/interview/search`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data.mockInterviews) 
-        setMockInterviewList(data.mockInterviews as InterViewData[]);
+        const response = await axiosInstance.get('/interview/search');
+        console.log(response.data.mockInterviews);
+        setMockInterviewList(response.data.mockInterviews as InterViewData[]);
       } catch (error) {
         console.error("Error fetching interview data: ", error);
       }
     };
+    
     getInterviewList();
-  }, []);
+  }, [searchTerm]); 
 
   return (
     <div className="mx-auto p-4">
