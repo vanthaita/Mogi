@@ -1,29 +1,28 @@
 'use client';
 import React, { useContext, useState, useEffect, createContext, ReactNode } from 'react';
 import { User, AuthContextProps } from '@/utils/type';
+import axiosInstance from '@/helper/axios';
+import { removeTokenFromCookies } from '@/app/action/storeToken';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const fetchProfileOnce = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/profile`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
+    const res = await axiosInstance.get('/auth/profile');
     console.log(res);
-    if (!res.ok) {
+
+    if (res.status !== 200) {
       throw new Error('Failed to fetch user profile');
     }
-    const userProfile = await res.json();
+
+    const userProfile = res.data;
     return userProfile;
   } catch (error) {
     console.error('Error fetching profile:', error);
     return null;
   }
 };
+
 
 export function AuthProvider({
   children,
@@ -44,6 +43,7 @@ export function AuthProvider({
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
+          removeTokenFromCookies();
         }
       });
     }
@@ -61,6 +61,7 @@ export function AuthProvider({
     setUser(null);
     setToken('');
     setIsLoggedIn(false);
+    removeTokenFromCookies();
   };
   
   return (
