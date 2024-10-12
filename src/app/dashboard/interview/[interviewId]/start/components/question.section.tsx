@@ -19,14 +19,13 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({ mockInterviewQuestion
 
     return (
         <Card className='p-4 bg-white'>
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2'>
+            <div className='flex flex-wrap justify-center gap-2'>
                 {mockInterviewQuestions.map((_, index: number) => (
-                    <Button 
+                    <Card 
                         key={index} 
-                        variant='neutral' 
-                        className={`rounded-full text-sm md:text-base lg:text-lg ${activeQuestionIndex === index ? 'bg-blue-200' : ''} truncate`}>
-                        <span className=' break-words'>{`Question ${index + 1}`}</span>
-                    </Button>
+                        className={`rounded-full text-sm md:text-base lg:text-lg px-10 border bg-white ${activeQuestionIndex === index ? 'bg-blue-200' : ''} truncate`}>
+                        <span className=' break-words'>{`${index + 1}`}</span>
+                    </Card>
                 ))}
             </div>
             <h2 className='text-xl sm:text-2xl md:text-3xl font-bold mt-6'>Question {activeQuestionIndex + 1}:</h2>

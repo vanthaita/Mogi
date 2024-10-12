@@ -24,6 +24,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     const [interviewData, setInterviewData] = useState<InterViewData | null>(null)
     const [isWebcamActive, setIsWebcamActive] = useState(false)
     const [alertToStart, setAlertToStart] = useState(false)    
+    const [loading, setIsloading] = useState(false);
     const router = useRouter()
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
                             </CardContent>
                         </Card>
                     </div>
-                    <div className='flex flex-col md:w-2/3 w-full h-full'>
+                    <div className='flex flex-col md:w-1/3 w-full h-full'>
                     <Card className='flex-1 flex flex-col items-center justify-between w-full h-full'>
                         <div className='w-full h-full bg-gray-200 relative flex items-center justify-center rounded-lg mb-6'>
                             {isWebcamActive ? (
@@ -119,11 +120,17 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
                                         onClick={() => setAlertToStart(!alertToStart)} 
                                     >Cancel</AlertDialogCancel>
                                     <AlertDialogAction 
-                                        onClick={() => {
-                                            return router.push(`/dashboard/interview/${params.interviewId}/start`)
+                                        disabled={loading} 
+                                        onClick={async () => {
+                                            setIsloading(true);
+                                            try {
+                                                await router.push(`/dashboard/interview/${params.interviewId}/start`);
+                                            } finally {
+                                                setIsloading(false);
+                                            }
                                         }}
                                     >
-                                        Start interview
+                                         {loading ? 'Loading...' : 'Start interview'}
                                     </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>

@@ -19,11 +19,13 @@ const Topbar = () => {
         '/dashboard/feedback': 'Feedback',
         '/dashboard/plan': 'Your Plan'
     };
-    
     const getCurrentPageTitle = () => {
-        if (pathname === '/dashboard/interview/feedback') {
+        if (pathname.startsWith('/dashboard/interview/') && pathname.endsWith('/feedback')) {
             return 'Feedback';
-        } else if (pathname === '/dashboard/interview') {
+        } else if (pathname.startsWith('/dashboard/interview') && pathname.endsWith('/start'))  {
+            return 'Start interview'
+        } 
+        else if (pathname === '/dashboard/interview') {
             return 'Interview';
         } else if (pathname === '/dashboard/interview-questions') {
             return 'Interview Questions';
