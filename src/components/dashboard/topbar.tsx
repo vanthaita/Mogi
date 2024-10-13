@@ -47,7 +47,7 @@ const Topbar = () => {
                 className="inline-flex items-center gap-x-2 rounded-md text-sm font-medium px-4 py-2 text-black"
             >
                 <Avatar>
-                    <AvatarImage src={user?.picture} />
+                    <AvatarImage src={user?.picture || '/avatar.svg'} />
                     <AvatarFallback>SB</AvatarFallback>
                 </Avatar>
                 <span className="text-sm md:text-xl ml-2 uppercase">{user?.name}</span>

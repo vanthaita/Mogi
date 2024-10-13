@@ -2,10 +2,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth.context';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import axiosInstance from '@/helper/axios';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -16,6 +17,8 @@ const ProfilePage = () => {
     email: '',
     providerId: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -33,21 +36,44 @@ const ProfilePage = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  const handleSaveChanges = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.post('/user', {
+        familyName: formData.familyName,
+        givenName: formData.givenName,
+        name: formData.name,
+      });
+      if (response.data) {
+        setSuccessMessage('Update successful');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!user) {
-    return <p>Loading...</p>; 
+    return <p>Loading...</p>;
   }
 
   return (
-    <Card className="p-4 bg-gray-100">
+    <div className="p-4">
       <div className="text-xl sm:text-2xl font-semibold mb-4">
-        Name: {formData.name}
+        User name: {formData.name}
       </div>
+      {successMessage && (
+        <div className="mb-4 p-2 bg-green-100 text-green-800 rounded">
+          {successMessage}
+        </div>
+      )}
       <div className="flex justify-start items-center gap-4">
-        <img
-          src={user?.picture}
-          alt={formData.name}
-          className="w-12 h-12 rounded-full object-cover"
-        />
+       <Avatar>
+            <AvatarImage src={user?.picture || '/avatar.svg'} />
+            <AvatarFallback>SB</AvatarFallback>
+        </Avatar>
         <p className="underline text-blue-500 cursor-pointer">Change image</p>
       </div>
       <form className="mt-6 space-y-4">
@@ -94,7 +120,7 @@ const ProfilePage = () => {
           <Input
             id="email"
             value={formData.email}
-            onChange={handleChange}
+            disabled={true}
             className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring focus:ring-opacity-50 focus:ring-blue-300"
           />
         </div>
@@ -106,16 +132,18 @@ const ProfilePage = () => {
           <Input
             id="providerId"
             value={formData.providerId}
-            onChange={handleChange}
+            disabled={true}
             className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring focus:ring-opacity-50 focus:ring-blue-300"
           />
         </div>
       </form>
       <div className="mt-6 flex justify-end gap-4">
         <Button className="px-4 py-2 border rounded-md text-gray-600">Cancel</Button>
-        <Button className="px-4 py-2 bg-black text-white rounded-md">Save changes</Button>
+        <Button className="px-4 py-2 bg-black text-white rounded-md" disabled={isLoading} onClick={handleSaveChanges}>
+          {isLoading ? 'Loading...' : 'Save changes'}
+        </Button>
       </div>
-    </Card>
+    </div>
   );
 };
 
