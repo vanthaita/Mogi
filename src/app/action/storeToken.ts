@@ -1,29 +1,19 @@
 "use server"
 import { cookies } from "next/headers";
-
-function setTokenCookies(atToken: string, rt_token: string) {
-    cookies().set('access_token', atToken, {
-        httpOnly: true,  
-        secure: true,   
-        maxAge: 60 * 60 * 24,  
-        path: "/",      
-        sameSite: "none",
-    });
-    cookies().set('refresh_token', rt_token, {
-        httpOnly: true,  
-        secure: true,   
-        maxAge: 60 * 60 * 24,  
-        path: "/",      
-        sameSite: "none",
-    });
+function getAccessToken() {
+    return cookies().get('access_token');
 }
+function getRefreshToken() {
+    return cookies().get('refresh_token');
+}
+
 function setTokenFromCookies(token: string) {
     cookies().set('access-token', token, {
         httpOnly: true,  
         secure: true,   
-        maxAge: 60 * 60 * 24,  
+        maxAge: 60 * 60 ,  
         path: "/",      
-        sameSite: "none",
+        sameSite: "strict",
     });
 }
 function removeTokenFromCookies() {
@@ -31,4 +21,4 @@ function removeTokenFromCookies() {
     cookies().delete('refresh_token');
 }
 
-export { setTokenCookies, removeTokenFromCookies ,setTokenFromCookies};
+export { getAccessToken, removeTokenFromCookies ,setTokenFromCookies, getRefreshToken};

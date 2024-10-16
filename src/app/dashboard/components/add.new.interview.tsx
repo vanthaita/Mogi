@@ -79,9 +79,8 @@ const AddNewInterview = () => {
           </ContextMenuTrigger>
         </ContextMenu>
       </div>
-
       <Dialog open={openAddNewInterview}>
-        <DialogContent className="sm:max-w-[1440px]" >
+        <DialogContent className="ssm:max-w-[90vw] sm:max-h-[90vh] max-w-[95vw] max-h-[95vh] overflow-y-auto" >
           <DialogHeader>
             <DialogTitle className='text-3xl font-bold'>Tell us more about the job.</DialogTitle>
             <DialogDescription className='text-sm font-medium'>

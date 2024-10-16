@@ -32,7 +32,7 @@ const InterviewPage = ({ params }: { params: { interviewId: string } }) => {
     return (
         <div className="w-full h-full relative">
             <div className="w-full h-full flex flex-col md:flex-row justify-between gap-4 bg-white">
-                <div className="md:w-2/3 w-full h-full md:p-10 p-4 gap-y-6 flex flex-col justify-between bg-white ">
+                <div className="md:w-2/3 w-full h-full mr-2 md:p-1 p-4 gap-y-6 flex flex-col justify-between">
                     <QuestionSection
                         mockInterviewQuestions={mockInterviewQuestions}
                         activeQuestionIndex={currentQuestionIndex}

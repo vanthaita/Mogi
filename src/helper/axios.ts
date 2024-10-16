@@ -1,8 +1,9 @@
+import { getAccessToken } from '@/app/action/storeToken';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://192.168.1.4:3001/api/v1',
-  timeout: 10000,
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+  // timeout: 10000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -10,11 +11,10 @@ const axiosInstance = axios.create({
 });
 axiosInstance.interceptors.request.use(
   async (config) => {
-    // console.log("test: ", access_token?.accessToken);
-    // if (access_token) {
-    //   config.headers.Cookie = `access_token=${access_token.accessToken}`;
-    //   console.log("Test: ",config.headers.Cookie);
-    // }
+    const access_token = await getAccessToken();
+    if (access_token) {
+      config.headers.Authorization = `Bearer ${access_token.value}`;
+    }
     return config;
   },
   (error) => {

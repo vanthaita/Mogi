@@ -6,11 +6,16 @@ import { removeTokenFromCookies } from '@/app/action/storeToken';
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-export const fetchProfileOnce = async () => {
+export const fetchProfileOnce = async (token: string) => {
   try {
-    const res = await axiosInstance.get('/auth/profile');
-    console.log(res);
-
+    if(!token) {
+      return;
+    }
+    const res = await axiosInstance.get('/auth/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (res.status !== 200) {
       throw new Error('Failed to fetch user profile');
     }
@@ -37,13 +42,13 @@ export function AuthProvider({
 
   useEffect(() => {
     if (token) {
-      fetchProfileOnce().then(profile => {
+      fetchProfileOnce(token).then(profile => {
         if (profile) {
           setUser(profile);
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
-          removeTokenFromCookies();
+          // removeTokenFromCookies();
         }
       });
     }
